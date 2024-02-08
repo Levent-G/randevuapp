@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const Nav = () => {
   return (
     <>
-      <div className="bg-gray-200">
+      <div className="bg-gray-200 p-3">
         <p className=" float-left p-3">RANDEVU APP</p>
         <ul className="p-3 text-right ">
           <Link to="/">
@@ -11,7 +11,7 @@ const Nav = () => {
               <span>Home</span>
             </li>
           </Link>
-          <Link to="/randevu">
+          <Link to="/login">
             <li className="inline m-2">
               <span>Randevu</span>
             </li>

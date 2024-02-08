@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   Typography,
   Grid,
@@ -8,24 +7,14 @@ import {
   MenuItem,
   Menu,
 } from "@mui/material";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ModalComp from "../component/ModalComp";
+import AuthNav from "../Layout/AuthNav";
 const RandevuTakvim = () => {
-  const randevuName = useParams();
-  console.log(randevuName);
+  const randevuName = "levent";
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
@@ -39,8 +28,62 @@ const RandevuTakvim = () => {
       hours: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"],
     },
     {
-      date: "2024-02-08",
+      date: "2024-02-10",
       name: "Alice",
+      hours: [
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+      ],
+    },
+    {
+      date: "2024-02-08",
+      name: "Ahmet",
+      hours: [
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+      ],
+    },
+    {
+      date: "2024-02-09",
+      name: "Ahmet",
+      hours: [
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+      ],
+    },
+    {
+      date: "2024-02-13",
+      name: "Ahmet",
       hours: [
         "09:00",
         "10:00",
@@ -60,7 +103,7 @@ const RandevuTakvim = () => {
   ]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -122,6 +165,7 @@ const RandevuTakvim = () => {
   const handleHourClick = (hour) => {
     if (!isHourBooked(selectedDate, hour)) {
       setSelectedHour(hour);
+      handleOpen();
     }
     setMenuAnchorEl(null);
   };
@@ -207,47 +251,25 @@ const RandevuTakvim = () => {
         onClose={handleMenuClose}
       >
         {hours.map((hour) => (
-          <Button onClick={handleOpen}>
-            <MenuItem
-              key={hour}
-              onClick={() => handleHourClick(hour)}
-              disabled={isHourBooked(selectedDate, hour)}
-              style={{
-                color: isHourBooked(selectedDate, hour) ? "#ff0000" : "green",
-              }}
-            >
-              {hour}
-            </MenuItem>
-          </Button>
+          <MenuItem
+            key={hour}
+            onClick={() => handleHourClick(hour)}
+            disabled={isHourBooked(selectedDate, hour)}
+            style={{
+              color: isHourBooked(selectedDate, hour) ? "#ff0000" : "green",
+            }}
+          >
+            {hour}
+          </MenuItem>
         ))}
       </Menu>
     );
   };
 
   return (
-    <div className="ml-12 mr-12 mt-5">
-       <Typography variant="h4" align="center" className="mb-5">RANDEVU İÇİN TARİH SEÇİNİZ</Typography>
-      <Grid container spacing={0} className="bg-gray-100 ">
-        <Grid item xs={12} className="p-5">
-          <Grid container justifyContent="space-between" alignItems="center" className="p-5">
-            <Grid item >
-              <IconButton onClick={previousMonth} ><ArrowLeftIcon /></IconButton>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5" align="center">
-                {getMonthName(currentMonth)} {currentMonth.getFullYear()}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={nextMonth}><ArrowRightIcon/></IconButton>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className="p-12">
-          <Grid container spacing={0} justifyContent="center">
-            {renderCalendarDays()}
-          </Grid>
-        </Grid>
+    <>
+      <AuthNav />
+      <div className="ml-12 mr-12 mt-5">
         {selectedDate && (
           <Grid item xs={12}>
             <Grid
@@ -255,7 +277,7 @@ const RandevuTakvim = () => {
               spacing={0}
               justifyContent="center"
               alignItems="center"
-              className="mt-5"
+              className="mb-5"
             >
               <Button
                 variant="outlined"
@@ -268,23 +290,49 @@ const RandevuTakvim = () => {
             </Grid>
           </Grid>
         )}
-      </Grid>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            RANDEVU SEÇME
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            GEREKLİ BİLGİLER
-          </Typography>
-        </Box>
-      </Modal>
-    </div>
+        <Typography variant="h4" align="center" className="mb-5">
+          RANDEVU İÇİN TARİH SEÇİNİZ
+        </Typography>
+        <Grid container spacing={0} className="bg-gray-100 ">
+          <Grid item xs={12} className="p-5">
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              className="p-5"
+            >
+              <Grid item>
+                <IconButton onClick={previousMonth}>
+                  <ArrowLeftIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <Typography variant="h5" align="center">
+                  {getMonthName(currentMonth)} {currentMonth.getFullYear()}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton onClick={nextMonth}>
+                  <ArrowRightIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} className="p-12">
+            <Grid container spacing={0} justifyContent="center">
+              {renderCalendarDays()}
+            </Grid>
+          </Grid>
+        </Grid>
+        <ModalComp
+          open={open}
+          setOpen={setOpen}
+          selectedDate={selectedDate}
+          selectedHour={selectedHour}
+          params={randevuName}
+        />
+      </div>
+    </>
   );
 };
 
