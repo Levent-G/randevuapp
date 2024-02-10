@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import {
   Typography,
   Grid,
@@ -12,6 +12,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ModalComp from "../component/ModalComp";
 import AuthNav from "../Layout/AuthNav";
+import { AuthContext } from "../firebase/context/AuthContext";
 const RandevuTakvim = () => {
   const randevuName = "levent";
 
@@ -103,7 +104,7 @@ const RandevuTakvim = () => {
   ]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-
+  const { girisKullanici } = useContext(AuthContext);
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -330,6 +331,7 @@ const RandevuTakvim = () => {
           selectedDate={selectedDate}
           selectedHour={selectedHour}
           params={randevuName}
+          randevuAlan={girisKullanici}
         />
       </div>
     </>

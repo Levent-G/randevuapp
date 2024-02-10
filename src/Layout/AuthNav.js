@@ -5,10 +5,12 @@ import { auth } from "../firebase/firebase";
 import { signOut } from "firebase/auth";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EmailIcon from "@mui/icons-material/Email";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import HomeIcon from '@mui/icons-material/Home';
+import { Link } from "react-router-dom";
 const AuthNav = () => {
   const { girisKullanici } = useContext(AuthContext);
-  
+
   return (
     <>
       <div className="bg-gray-800 text-white">
@@ -35,11 +37,20 @@ const AuthNav = () => {
               <EmailIcon />
             </span>
           </li>
-          <li className="inline mr-3 float-right hover:text-gray-400">
-            <span>
-              <CalendarMonthIcon />
-            </span>
-          </li>
+          <Link to="/randevu/takip">
+            <li className="inline mr-3 float-right hover:text-gray-400">
+              <span>
+                <CalendarMonthIcon />
+              </span>
+            </li>
+          </Link>
+          <Link to="/randevu/takvim">
+            <li className="inline mr-3 float-right hover:text-gray-400">
+              <span>
+                <HomeIcon />
+              </span>
+            </li>
+          </Link>
         </ul>
       </div>
     </>

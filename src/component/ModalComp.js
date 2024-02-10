@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Typography, Box, TextField, MenuItem, Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
+import { db } from "../firebase/firebase";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 const style = {
   position: "absolute",
   top: "50%",
@@ -14,8 +20,15 @@ const style = {
 };
 const ModalComp = (props) => {
   const handleClose = () => props.setOpen(false);
+  const randevuAlan = props.randevuAlan.displayName;
+  const randevuAlanEmail = props.randevuAlan.email
+  const id = props.randevuAlan.uid;
+  const randevuTarihi = props.selectedDate;
+  const randevuSaati = props.selectedHour;
+  const iptalDurum = null;
   const [berberSecim, setBerberSecim] = useState("");
   const [not, setNot] = useState("");
+
   const [control, setControl] = useState(false);
   const currencies = [
     {
@@ -35,6 +48,16 @@ const ModalComp = (props) => {
       label: "murat",
     },
   ];
+  
+  const ref = collection(db, "randevular");
+
+  const randevuEkle = async (doc)=>{
+    const eklenenRandevu = await addDoc(ref,{
+      ...doc,
+      tarih:serverTimestamp(),
+    });
+    console.log(eklenenRandevu,"eklenen....");
+  }
   return (
     <div>
       <Modal
@@ -61,7 +84,7 @@ const ModalComp = (props) => {
             component="h6"
             className="pb-5 text-white bg-gray-500 p-4"
           >
-            Gün:  {props.selectedDate}
+            Gün:  {randevuTarihi}
           </Typography>
 
           <Typography
@@ -70,7 +93,7 @@ const ModalComp = (props) => {
             component="h6"
             className="pb-5 text-white bg-gray-500 p-4"
           >
-            Saat: {props.selectedHour} 
+            Saat: {randevuSaati} 
           </Typography><hr className="bg-black"/>
 
           <Typography
@@ -112,7 +135,7 @@ const ModalComp = (props) => {
             <>
               <p className="bg-gray-600 text-gray-200 p-4">
                 <span className="uppercase font-bold text-white">
-                  {props.params.name}
+                  {randevuAlan}
                 </span>{" "}
                 ismi ile{" "}
                 <span className=" uppercase font-bold text-white">
@@ -121,11 +144,11 @@ const ModalComp = (props) => {
                 berberinden,<span className="font-bold text-white">"{not}" </span>
                 notu ile{" "}
                 <span className="font-bold  text-white">
-                  {props.selectedDate}
+                  {randevuTarihi}
                 </span>{" "}
                 tarihinde saat:
                 <span className="font-bold  text-white">
-                  {props.selectedHour}
+                  {randevuSaati}
                 </span>{" "}
                 randevunuzu onaylıyor musunuz ?{" "}
               </p>
@@ -142,7 +165,7 @@ const ModalComp = (props) => {
                 }}
                 onClick={() => {
                   setControl(false);
-                  alert("RANDEVUNUZ ALINMIŞTIR. BERBERİNİZ RANDEVUNUZU ONAYLADIĞINDA KONTROL EDEBİLİRSİNİZ");
+                  randevuEkle({id,randevuAlan,randevuAlanEmail,randevuTarihi,randevuSaati,berberSecim,not,iptalDurum});
                   setBerberSecim("");
                   setNot("");
                   handleClose();

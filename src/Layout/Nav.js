@@ -11,7 +11,7 @@ const Nav = () => {
               <span>Home</span>
             </li>
           </Link>
-          <Link to="/login">
+          <Link to="/randevu/takvim">
             <li className="inline m-2">
               <span>Randevu</span>
             </li>
