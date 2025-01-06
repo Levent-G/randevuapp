@@ -11,43 +11,43 @@ const RandevuCard = (props) => {
         sx={{
           maxWidth: 345,
           margin: "20px",
-
           boxShadow: "5px 5px 5px 10px gray ",
           padding: "10px",
         }}
       >
-        <Typography variant="h4" className="text-center">
+        <Typography  className="text-center">
           RANDEVU
         </Typography>
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
+        <CardContent >
+          <Typography gutterBottom component="div">
             Randevu Alan:{" "}
             <span className="uppercase">{props.randevu.randevuAlan}</span>
           </Typography>
-          <Typography gutterBottom variant="h7" component="div">
+          <Typography gutterBottom  component="div">
             Randevu Email:{" "}
             <span className="uppercase">{props.randevu.randevuAlanEmail}</span>
           </Typography>
-        </CardContent>
-        <div className="bg-gray-200 p-5">
-          <Typography variant="h6">
+          <div className="bg-gray-200 p-5">
+          <Typography >
             Randevu Berber :{" "}
             <span className="uppercase">{props.randevu.berberSecim}</span>
           </Typography>
-          <Typography variant="h7">
+          <Typography >
             Randevu Not : {props.randevu.not}
           </Typography>
         </div>
+        </CardContent>
+      
 
         <CardActions className="mt-5">
-          <Typography variant="h6">
+          <Typography >
             Randevu Tarihi : {props.randevu.randevuTarihi}
           </Typography>
-          <Typography variant="h6">
+          <Typography >
             Randevu Saati : {props.randevu.randevuSaati}
           </Typography>
         </CardActions>
-        <Typography variant="h6" className="bg-gray-200 p-5">
+        <Typography  className="bg-gray-200 p-5">
           Randevu Onaylanma Durumu :{" "}
           {props.randevu.iptalDurum == null ? (
             <span className="bg-red-500 p-1 text-white uppercase">Onaylanmadı</span>

@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Typography, Box, TextField, MenuItem, Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { db } from "../firebase/firebase";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 const style = {
   position: "absolute",
   top: "50%",
@@ -21,7 +20,7 @@ const style = {
 const ModalComp = (props) => {
   const handleClose = () => props.setOpen(false);
   const randevuAlan = props.randevuAlan.displayName;
-  const randevuAlanEmail = props.randevuAlan.email
+  const randevuAlanEmail = props.randevuAlan.email;
   const id = props.randevuAlan.uid;
   const randevuTarihi = props.selectedDate;
   const randevuSaati = props.selectedHour;
@@ -48,61 +47,62 @@ const ModalComp = (props) => {
       label: "murat",
     },
   ];
-  
+
   const ref = collection(db, "randevular");
 
-  const randevuEkle = async (doc)=>{
-    const eklenenRandevu = await addDoc(ref,{
-      ...doc,
-      tarih:serverTimestamp(),
-    });
-    console.log(eklenenRandevu,"eklenen....");
-  }
+  const randevuEkle = async (doc) => {
+    try {
+      await addDoc(ref, {
+        ...doc,
+        tarih: serverTimestamp(),
+      });
+      toast.success(`RANDEVU OLUŞTURULDU`);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div>
       <Modal
         open={props.open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby="nested-modal-title"
+        aria-describedby="nested-modal-description"
       >
         <Box sx={style}>
-        
-
           <Typography
             id="modal-modal-title"
             variant="h5"
             component="h1"
             className="pb-5 "
           >
-            RANDEVU Günü ve Saati <hr className="bg-black"/>
+            RANDEVU Günü ve Saati <hr className="bg-black" />
           </Typography>
-
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h6"
             className="pb-5 text-white bg-gray-500 p-4"
           >
-            Gün:  {randevuTarihi}
+            Gün: {randevuTarihi}
           </Typography>
-
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h6"
             className="pb-5 text-white bg-gray-500 p-4"
           >
-            Saat: {randevuSaati} 
-          </Typography><hr className="bg-black"/>
-
+            Saat: {randevuSaati}
+          </Typography>
+          <hr className="bg-black" />
           <Typography
             id="modal-modal-title"
             variant="h5"
             component="h1"
             className="pb-5 "
           >
-            RANDEVU Alamak istediğniz kişi ve notunuz <hr className="bg-black"/>
+            RANDEVU Alamak istediğniz kişi ve notunuz{" "}
+            <hr className="bg-black" />
           </Typography>
           <TextField
             value={berberSecim}
@@ -120,7 +120,6 @@ const ModalComp = (props) => {
               </MenuItem>
             ))}
           </TextField>
-
           <TextField
             value={not}
             id="outlined"
@@ -141,7 +140,8 @@ const ModalComp = (props) => {
                 <span className=" uppercase font-bold text-white">
                   {berberSecim}{" "}
                 </span>
-                berberinden,<span className="font-bold text-white">"{not}" </span>
+                berberinden,
+                <span className="font-bold text-white">"{not}" </span>
                 notu ile{" "}
                 <span className="font-bold  text-white">
                   {randevuTarihi}
@@ -165,7 +165,16 @@ const ModalComp = (props) => {
                 }}
                 onClick={() => {
                   setControl(false);
-                  randevuEkle({id,randevuAlan,randevuAlanEmail,randevuTarihi,randevuSaati,berberSecim,not,iptalDurum});
+                  randevuEkle({
+                    id,
+                    randevuAlan,
+                    randevuAlanEmail,
+                    randevuTarihi,
+                    randevuSaati,
+                    berberSecim,
+                    not,
+                    iptalDurum,
+                  });
                   setBerberSecim("");
                   setNot("");
                   handleClose();
@@ -196,12 +205,13 @@ const ModalComp = (props) => {
             <Button
               variant="outlined"
               onClick={() => setControl(true)}
-              sx={{marginTop:"20px"}}
+              sx={{ marginTop: "20px" }}
               className="mt-5 bg-blue-400 p-4 text-white"
             >
               Randevu Onayla
             </Button>
-          )} <hr className="bg-black"/>
+          )}{" "}
+          <hr className="bg-black" />
         </Box>
       </Modal>
     </div>

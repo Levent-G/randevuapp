@@ -5,9 +5,10 @@ import {
   onSnapshot,
   query,
   where,
-  orderBy,
 } from "firebase/firestore";
+import { toast } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 export const RandevuContext = (koleksiyon, _q, ) => {
   const [documents, setDocuments] = useState(null);
   const [error, setError] = useState(null);
@@ -30,6 +31,7 @@ export const RandevuContext = (koleksiyon, _q, ) => {
           dizi.push({ ...doc.data(), id: doc.id });
         });
         setDocuments(dizi);
+   
         setError(null);
       },
       (error) => {
@@ -37,8 +39,9 @@ export const RandevuContext = (koleksiyon, _q, ) => {
         setError("Verilere Erişilemedi !");
       }
     );
-
+   
     return () => unsub();
+    
   }, [koleksiyon, q]);
 
   return { documents, error };

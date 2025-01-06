@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   Typography,
   Grid,
@@ -13,6 +13,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ModalComp from "../component/ModalComp";
 import AuthNav from "../Layout/AuthNav";
 import { AuthContext } from "../firebase/context/AuthContext";
+import { RandevuContext } from "../firebase/context/RanedevuContext";
 const RandevuTakvim = () => {
   const randevuName = "levent";
 
@@ -20,88 +21,16 @@ const RandevuTakvim = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-  const [appointments, setAppointments] = useState([
-    { date: "2024-02-01", name: "Alice", hours: ["10:00", "11:00"] },
-    { date: "2024-02-05", name: "Bob", hours: ["13:00", "14:00", "15:00"] },
-    {
-      date: "2024-02-07",
-      name: "Charlie",
-      hours: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"],
-    },
-    {
-      date: "2024-02-10",
-      name: "Alice",
-      hours: [
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-      ],
-    },
-    {
-      date: "2024-02-08",
-      name: "Ahmet",
-      hours: [
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-      ],
-    },
-    {
-      date: "2024-02-09",
-      name: "Ahmet",
-      hours: [
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-      ],
-    },
-    {
-      date: "2024-02-13",
-      name: "Ahmet",
-      hours: [
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-      ],
-    },
-    // Add example data here.
-  ]);
+
+  const { documents, error } = RandevuContext("randevular");
+
+  const appointments = documents?.map((doc) => ({
+    date: doc?.randevuTarihi,
+    name: doc?.randevuAlan,
+    hours: [doc?.randevuSaati],
+  }));
+  console.log(appointments);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const { girisKullanici } = useContext(AuthContext);
@@ -126,33 +55,38 @@ const RandevuTakvim = () => {
     nextMonth.setMonth(nextMonth.getMonth() + 1);
     setCurrentMonth(nextMonth);
   };
-
   const isDateBooked = (date) => {
-    const appointment = appointments.find(
+    const appointment = appointments?.filter(
       (appointment) => appointment.date === date
     );
-    if (appointment) {
-      const bookedHours = appointment.hours.map((hour) =>
-        parseInt(hour.split(":")[0])
-      );
-      for (let hour = 9; hour <= 19; hour++) {
-        if (!bookedHours.includes(hour)) {
-          return false; // En az bir saat boş
-        }
-      }
-      return true; // Tüm saatler dolu
+  
+    if (appointment?.length === 0) {
+      return false; // Hiç randevu yok
     }
-    return false; // Hiç randevu yok
+  
+    const allHours = appointment?.flatMap((appt) => appt.hours.map(hour => parseInt(hour.split(":")[0])));
+    const allDayHours = Array.from({ length: 11 }, (_, i) => i + 9); // Gün içindeki tüm saatler (9'dan 19'a kadar)
+    
+    return allDayHours.every(hour => allHours?.includes(hour));
   };
-
   const isHourBooked = (date, hour) => {
-    const appointment = appointments.find(
+    // Belirli bir tarihte olan tüm randevuları al
+    const appointmentsOnDate = appointments?.filter(
       (appointment) => appointment.date === date
     );
-    if (appointment) {
-      return appointment.hours.includes(hour);
+
+    // Eğer hiç randevu yoksa
+    if (appointmentsOnDate?.length === 0) {
+      return false;
     }
-    return false;
+
+    // Tüm randevuların saatlerini birleştir
+    const allHours = appointmentsOnDate.flatMap(
+      (appointment) => appointment.hours
+    );
+
+    // Belirli bir saat dolu mu kontrol et
+    return allHours.includes(hour);
   };
 
   const handleDayClick = (date) => {
@@ -332,6 +266,7 @@ const RandevuTakvim = () => {
           selectedHour={selectedHour}
           params={randevuName}
           randevuAlan={girisKullanici}
+       
         />
       </div>
     </>
