@@ -1,9 +1,29 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from "react";
+import RandevuTakvim from "./RandevuTakvim";
+import BerberRandevulari from "./BerberRandevulari";
+import { AuthContext } from "../firebase/context/AuthContext";
+import AuthNav from "../Layout/AuthNav";
 
 const HomePage = () => {
-  return (
-    <div>HomePage</div>
-  )
-}
+  const { girisKullanici } = useContext(AuthContext); // Giriş yapan berberin bilgisi
+  const berberler = {
+    name: "mehmet",
+  };
+  const [isBerber, setIsBerber] = useState(false);
+  useEffect(() => {
+    if (girisKullanici) {
+      if (girisKullanici.displayName === berberler.name) {
+        setIsBerber(true);
+      }
+    }
+  }, [girisKullanici]);
 
-export default HomePage
+  return (
+    <div>
+      <AuthNav />
+      {isBerber ? <BerberRandevulari /> : <RandevuTakvim />}
+    </div>
+  );
+};
+
+export default HomePage;

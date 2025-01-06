@@ -25,6 +25,7 @@ const ModalComp = (props) => {
   const randevuTarihi = props.selectedDate;
   const randevuSaati = props.selectedHour;
   const iptalDurum = null;
+  const isOnay = false;
   const [berberSecim, setBerberSecim] = useState("");
   const [not, setNot] = useState("");
 
@@ -174,6 +175,7 @@ const ModalComp = (props) => {
                     berberSecim,
                     not,
                     iptalDurum,
+                    isOnay,
                   });
                   setBerberSecim("");
                   setNot("");

@@ -22,7 +22,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       setYukleniyor(false);
       toast.success(`Hoşgeldin ${email}`);
-      navigate("/randevu/takvim");
+      navigate("/");
     } catch (error) {
       toast.error(error.message);
       setYukleniyor(false);

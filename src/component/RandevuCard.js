@@ -49,11 +49,11 @@ const RandevuCard = (props) => {
         </CardActions>
         <Typography  className="bg-gray-200 p-5">
           Randevu Onaylanma Durumu :{" "}
-          {props.randevu.iptalDurum == null ? (
+          {props.randevu?.isOnay == null ? (
             <span className="bg-red-500 p-1 text-white uppercase">Onaylanmadı</span>
           ) : (
             <span className="bg-green-500 p-1 text-white uppercase">
-              {props.randevu.iptalDurum}
+               Onaylandı
             </span>
           )}
         </Typography>
